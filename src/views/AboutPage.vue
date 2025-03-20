@@ -282,7 +282,7 @@
 .profile-content {
   flex: 1;
   padding: 25px;
-  background-color: #dadada8a;
+  // background-color: #dadada8a;
 
   h3 {
     font-size: 1.8rem;
