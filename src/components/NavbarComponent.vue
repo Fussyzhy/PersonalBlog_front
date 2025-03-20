@@ -24,7 +24,7 @@ const links = [
   { name: '首页', path: '/' },
   { name: '文章', path: '/article' },
   { name: '作品', path: '/work' },
-  { name: '关于', path: '#'}
+  { name: '关于', path: '/about' }
 ]
 </script>
 

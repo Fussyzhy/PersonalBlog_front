@@ -8,7 +8,7 @@
 
     <!-- 分类筛选 -->
     <div class="filter-container">
-      <el-radio-group v-model="activeCategory" size="large">
+      <el-radio-group v-model="activeCategory" size="large" fill="#5bb888">
         <el-radio-button label="all">全部</el-radio-button>
         <el-radio-button label="web">Web开发</el-radio-button>
         <el-radio-button label="mobile">移动应用</el-radio-button>
@@ -126,6 +126,13 @@ const filteredWorks = computed(() => {
   display: flex;
   justify-content: center;
   margin-bottom: 30px;
+
+  /* 添加el-radio-button悬停时文字变色效果 */
+  :deep(.el-radio-button__inner) {
+    &:hover {
+      color: #50b886!important;
+    }
+  }
 }
 
 .works-grid {
