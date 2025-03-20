@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-// @ts-ignore
-import Navbar from '../components/NavbarComponent.vue';
 </script>
 
 <template>
   <div class="article-container">
-    <!-- 导航栏 -->
-    <Navbar></Navbar>
-
     <!-- 文章内容区域 -->
     <main class="article-main">
       <!-- 文章头部信息 -->
@@ -165,11 +159,6 @@ import Navbar from '../components/NavbarComponent.vue';
         </a>
       </div>
     </aside>
-
-    <!-- 页脚 -->
-    <footer class="footer">
-      <p>© 2025 My Blog. All rights reserved.</p>
-    </footer>
   </div>
 </template>
 

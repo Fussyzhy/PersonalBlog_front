@@ -4,10 +4,6 @@
       <h1>HaoYangのBlog</h1>
     </div>
     <div class="nav-menu">
-      <!-- <a href="/" class="active">首页</a>
-      <a href="/article">文章</a>
-      <a href="/">分类</a>
-      <a href="/">关于</a> -->
       <router-link
         v-for="link in links"
         :key="link.path"
@@ -27,7 +23,7 @@ const route = useRoute()
 const links = [
   { name: '首页', path: '/' },
   { name: '文章', path: '/article' },
-  { name: '分类', path: '#' },
+  { name: '作品', path: '/work' },
   { name: '关于', path: '#'}
 ]
 </script>
@@ -38,8 +34,17 @@ const links = [
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #eee;
+  padding: 1rem 80px;
+  border-bottom: 1px solid #747474;
+  transition: all 0.3s;
+  // background-color: #ff0e0e;
+  // border-radius: 20px;
+
+  &:hover {
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+    //Y轴和x轴旋转
+    // transform: rotateY(10deg) rotateX(10deg);
+  }
 
   .nav-logo {
     h1 {

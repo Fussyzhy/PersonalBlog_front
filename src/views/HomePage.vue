@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-// @ts-ignore
-import Navbar from '../components/NavbarComponent.vue';
+// import { ref } from 'vue';
+
 </script>
 
 <template>
   <div class="home-container">
-    <!-- 导航栏 -->
-    <Navbar></Navbar>
     <!-- 个人简介区域 -->
     <section class="profile-section">
       <div class="profile-content">
@@ -51,11 +48,6 @@ import Navbar from '../components/NavbarComponent.vue';
         </article>
       </div>
     </section>
-
-    <!-- 页脚 -->
-    <footer class="footer">
-      <p>© 2025 My Blog. All rights reserved.</p>
-    </footer>
   </div>
 </template>
 
