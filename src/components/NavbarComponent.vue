@@ -14,15 +14,41 @@
       </router-link>
     </div>
     <div class="nav-login">
-      <el-button type="primary" class="login-button" @click="router.push('/login')">登录</el-button>
+      <el-button type="primary" class="login-button" @click="router.push('/login')" v-if="!isLogin">登录</el-button>
+      <el-button type="primary" class="login-button" @click="handleLogout()" v-else>退出</el-button>
     </div>
   </nav>
 </template>
 
 <script setup>
 import { useRoute, useRouter} from 'vue-router'
+// 引入pinia
+import { useUserStore } from '../stores/user';
+import { onBeforeMount, ref, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+
 const route = useRoute()
 const router = useRouter()
+const isLogin = ref(false)
+
+// 监听用户登录状态变化
+watch(() => useUserStore().token, (newValue, oldValue) => {
+  if (useUserStore().token) {
+    isLogin.value = true
+  } else {
+    isLogin.value = false
+  }
+})
+
+onBeforeMount(() => {
+  if (useUserStore().token) {
+    isLogin.value = true
+  } else {
+    isLogin.value = false
+  }
+})
+
+
 
 const links = [
   { name: '首页', path: '/' },
@@ -30,6 +56,15 @@ const links = [
   { name: '作品', path: '/work' },
   { name: '关于', path: '/about' }
 ]
+
+const handleLogout = () => {
+  useUserStore().removeToken()
+  ElMessage({
+    message: '退出成功！',
+    type: 'success',
+  })
+  router.push('/')
+}
 </script>
 
 <style scoped lang="scss">

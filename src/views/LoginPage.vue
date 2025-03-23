@@ -1,13 +1,32 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-
+// @ts-ignore
+import { userLoginService } from '../api/user';
+import router from '../router';
+import { useUserStore } from '../stores/user';
+import { ElMessage } from 'element-plus'
 const username = ref('');
 const password = ref('');
 const rememberMe = ref(false);
 
-const handleLogin = () => {
+const handleLogin = async () => {
   // 登录逻辑将在这里实现
-  console.log('登录信息:', { username: username.value, password: password.value, rememberMe: rememberMe.value });
+  const res = await userLoginService({
+    username: username.value,
+    password: password.value,
+  })
+  // 登录成功后跳转到首页
+  if (res.data.code === 200) {
+    // 存储token
+    ElMessage({
+      message: `欢迎用户${username.value}`,
+      type: 'success',
+    })
+    useUserStore().setToken(res.data.data.token);
+    setTimeout(() => {
+      router.push('/home');
+    }, 500)
+  }
 };
 </script>
 
