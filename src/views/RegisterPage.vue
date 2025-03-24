@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <h2 class="login-title">登录</h2>
-      <form @submit.prevent="handleLogin" class="login-form">
+      <h2 class="login-title">注册</h2>
+      <form @submit.prevent="handleRegister" class="login-form">
         <div class="form-group">
           <label for="username">用户名/邮箱</label>
           <input 
@@ -26,17 +26,13 @@
         </div>
         
         <div class="form-options">
-          <div class="remember-me">
-            <input type="checkbox" id="remember" v-model="rememberMe">
-            <label for="remember">记住我</label>
-          </div>
           <a href="#" class="forgot-password">忘记密码?</a>
         </div>
         
-        <button type="submit" class="login-button">登录</button>
+        <button type="submit" class="login-button">注册</button>
         
         <div class="register-link">
-          还没有账号? <a href="/register">立即注册</a>
+          已有账号！ <a href="/login">立即登录</a>
         </div>
       </form>
     </div>
@@ -47,32 +43,14 @@
 import { ref } from 'vue';
 // @ts-ignore
 import { userLoginService } from '../api/user';
-import router from '../router';
-import { useUserStore } from '../stores/user';
-import { ElMessage } from 'element-plus'
 const username = ref('');
 const password = ref('');
 const rememberMe = ref(false);
 
-const handleLogin = async () => {
-  // 登录逻辑将在这里实现
-  const res = await userLoginService({
-    username: username.value,
-    password: password.value,
-  })
-  // 登录成功后跳转到首页
-  if (res.data.code === 200) {
-    // 存储token
-    ElMessage({
-      message: `欢迎用户${username.value}`,
-      type: 'success',
-    })
-    useUserStore().setToken(res.data.data.token);
-    setTimeout(() => {
-      router.push('/home');
-    }, 500)
-  }
-};
+const handleRegister = () => {
+
+}
+
 </script>
 
 <style scoped lang="scss">
