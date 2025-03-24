@@ -4,12 +4,12 @@
       <h2 class="login-title">注册</h2>
       <form @submit.prevent="handleRegister" class="login-form">
         <div class="form-group">
-          <label for="username">用户名/邮箱</label>
+          <label for="username">邮箱</label>
           <input 
             type="text" 
             id="username" 
             v-model="username" 
-            placeholder="请输入用户名或邮箱" 
+            placeholder="请输入邮箱" 
             required
           >
         </div>
@@ -23,6 +23,21 @@
             placeholder="请输入密码" 
             required
           >
+        </div>
+
+        <div class="form-group">
+          <label for="password">验证码</label>
+          <div style="display: flex;">
+            <input 
+            type="text" 
+            id="password" 
+            v-model="code" 
+            placeholder="请输入验证码" 
+            style="border-radius: 20px;"
+            >
+            <div style="width: 60px;"></div>
+            <button class="login-button" style="border-radius: 20px;" @click="handleSendCode()">发送验证码</button>
+          </div>
         </div>
         
         <div class="form-options">
@@ -41,14 +56,36 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { ElMessage } from 'element-plus'
 // @ts-ignore
-import { userLoginService } from '../api/user';
+import { userRegisterService, sendEmailService } from '../api/user';
+import router from '../router';
+
 const username = ref('');
 const password = ref('');
-const rememberMe = ref(false);
+const code = ref('');
 
-const handleRegister = () => {
+const handleRegister = async () => {
+  const res = await userRegisterService({
+    username: username.value,
+    password: password.value,
+    code: code.value
+  })
+  if (res.data.code === 200) {
+    ElMessage({
+      message: `注册成功啦！`,
+      type: 'success',
+    })
+    setTimeout(() => {
+      router.push('/login');
+    }, 500)
+  }
+}
 
+const handleSendCode = async () => {
+  await sendEmailService({
+    email: username.value
+  })
 }
 
 </script>
