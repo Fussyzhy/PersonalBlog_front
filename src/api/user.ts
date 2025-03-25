@@ -11,3 +11,7 @@ export const userRegisterService = ({ username, password, code }: { username: st
 export const sendEmailService = ({email}: {email: string;}) => {
   return request.post('/user/getEmail',{email})
 }
+
+export const changePasswordService = ({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) => {
+  return request.post('/user/changePassword', { oldPassword, newPassword })
+}
