@@ -15,7 +15,19 @@
     </div>
     <div class="nav-login">
       <el-button type="primary" class="login-button" @click="router.push('/login')" v-if="!isLogin">登录</el-button>
-      <el-button type="primary" class="login-button" @click="handleLogout()" v-else>退出</el-button>
+      <div class="user-container" v-else>
+        <img 
+          src="../assets/images/avatar.png" 
+          alt="" class="user-button"
+          @click="toggleExitBox"
+        >
+        <div class="exit-box" v-show="showExitBox">
+          <div class="exit" @click="handleClickUser()">
+            <el-icon style="margin-top: 3px; margin-right: 6px;"><User /></el-icon>个人主页</div>
+          <div class="exit" @click="handleLogout()">
+            <el-icon style="margin-top: 4px; margin-right: 6px;"><Remove /></el-icon>退出登录</div>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
@@ -24,12 +36,40 @@
 import { useRoute, useRouter} from 'vue-router'
 // 引入pinia
 import { useUserStore } from '../stores/user';
-import { onBeforeMount, ref, watch } from 'vue'
+import { onBeforeMount, ref, watch, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()
 const isLogin = ref(false)
+const showExitBox = ref(false)
+
+// 切换退出框显示状态
+const toggleExitBox = () => {
+  showExitBox.value = !showExitBox.value;
+}
+
+const handleClickUser = () => {
+  router.push('/user')
+  showExitBox.value = false
+}
+
+// 点击外部区域关闭退出框
+const handleClickOutside = (event) => {
+  const userContainer = document.querySelector('.user-container');
+  if (userContainer && !userContainer.contains(event.target) && showExitBox.value) {
+    showExitBox.value = false;
+  }
+}
+
+// 添加和移除点击事件监听器
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+})
 
 // 监听用户登录状态变化
 watch(() => useUserStore().token, (newValue, oldValue) => {
@@ -64,6 +104,7 @@ const handleLogout = () => {
     type: 'success',
   })
   router.push('/')
+  showExitBox.value = false
 }
 </script>
 
@@ -80,7 +121,7 @@ const handleLogout = () => {
   margin: auto;
 
   .nav-logo {
-    width: 20%;
+    width: 25%;
     transition: all 0.3s;
     border-radius: 10px;
     padding: 0px 20px;
@@ -124,6 +165,7 @@ const handleLogout = () => {
 
   .nav-login {
     width: 10%;
+    position: relative;
 
     .login-button {
       width:80px;
@@ -138,6 +180,50 @@ const handleLogout = () => {
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       }
     }
+
+    .user-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 100px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: all 0.3s; // 添加过渡效果，使背景颜色变化更平滑;
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+   .exit-box {
+      position: absolute;
+      top: 60px;
+      right: -60px;
+      width: 150px;
+      // height: 80px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 5px;
+      z-index: 100;
+      transition: opacity 0.3s;
+
+      .exit {
+        margin: 6px 0px;
+        width:150px;
+        height: 30px;
+        border-radius: 8px;
+        transition: all 0.3s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333333;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+   }
   }
 }
 

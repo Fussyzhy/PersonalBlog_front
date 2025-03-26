@@ -12,6 +12,10 @@ export const sendEmailService = ({email}: {email: string;}) => {
   return request.post('/user/getEmail',{email})
 }
 
-export const changePasswordService = ({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) => {
-  return request.post('/user/changePassword', { oldPassword, newPassword })
+export const userInfoService = (token:string) => {
+  return request.get(`/auth/getInfo/${token}`)
 }
+
+// export const changePasswordService = ({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) => {
+//   return request.post('/user/changePassword', { oldPassword, newPassword })
+// }

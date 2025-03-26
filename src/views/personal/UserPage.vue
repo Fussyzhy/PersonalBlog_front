@@ -4,11 +4,11 @@
     <div class="profile-card">
       <div class="profile-header">
         <div class="avatar">
-          <img src="/src/assets/images/avatar.png" alt="用户头像">
+          <img :src="userInfo.avatar === '1' ? '/src/assets/images/avatar.png' : userInfo.avatar" alt="用户头像">
         </div>
         <div class="profile-info">
           <div class="profile-header-row">
-            <h1>{{ formData.username }}</h1>
+            <h1>{{ userInfo.nickname }}</h1>
             <el-button type="primary" :icon="Edit" circle @click="dialogVisible = true" />
           </div>
           <p class="bio">{{ formData.bio }}</p>
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="stats-grid">
+      <div class="stats-grid" v-if="userInfo.role === 0">
         <div class="stat-item">
           <span class="stat-value">{{ userStats.articles }}</span>
           <span class="stat-label">文章</span>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- 最近文章列表 -->
-    <div class="recent-articles">
+    <div class="recent-articles"  v-if="userInfo.role === 0">
       <h2>最近发布</h2>
       <div class="article-list">
         <div v-for="article in recentArticles" :key="article.title" class="article-item">
@@ -134,10 +134,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onBeforeMount } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Edit, Lock } from '@element-plus/icons-vue';
-import { changePasswordService } from '@/api/user';
+import { useUserStore } from '../../stores/user';
+import { userInfoService } from '@/api/user';
+// import { changePasswordService } from '@/api/user';
+
+const userStore = useUserStore();
+const userInfo = reactive({
+  username: '',
+  avatar: '',
+  nickname: '',
+  role: 1,
+})
+// 根据token获取用户信息
+onBeforeMount(async () => {
+  const res = await userInfoService(userStore.token);
+  userInfo.username = res.data.data.username;
+  userInfo.avatar = res.data.data.avatar;
+  userInfo.nickname = res.data.data.nickname;
+  userInfo.role = res.data.data.role;
+  console.log(userInfo);
+})
 
 const dialogVisible = ref(false);
 const formData = ref({
@@ -189,34 +208,34 @@ const passwordFormRef = ref();
 
 // 处理密码修改
 const handlePasswordChange = async () => {
-  if (!passwordFormRef.value) return;
+  // if (!passwordFormRef.value) return;
   
-  await passwordFormRef.value.validate(async (valid: boolean) => {
-    if (valid) {
-      try {
-        // 调用密码修改API
-        const res = await changePasswordService({
-          oldPassword: passwordForm.oldPassword,
-          newPassword: passwordForm.newPassword
-        });
+  // await passwordFormRef.value.validate(async (valid: boolean) => {
+  //   if (valid) {
+  //     try {
+  //       // 调用密码修改API
+  //       const res = await changePasswordService({
+  //         oldPassword: passwordForm.oldPassword,
+  //         newPassword: passwordForm.newPassword
+  //       });
         
-        if (res.data.code === 200) {
-          ElMessage.success('密码修改成功');
-          // 重置表单
-          passwordForm.oldPassword = '';
-          passwordForm.newPassword = '';
-          passwordForm.confirmPassword = '';
-        } else {
-          ElMessage.error(res.data.msg || '密码修改失败');
-        }
-      } catch (error) {
-        console.error('密码修改出错:', error);
-        ElMessage.error('密码修改失败，请稍后重试');
-      }
-    } else {
-      return false;
-    }
-  });
+  //       if (res.data.code === 200) {
+  //         ElMessage.success('密码修改成功');
+  //         // 重置表单
+  //         passwordForm.oldPassword = '';
+  //         passwordForm.newPassword = '';
+  //         passwordForm.confirmPassword = '';
+  //       } else {
+  //         ElMessage.error(res.data.msg || '密码修改失败');
+  //       }
+  //     } catch (error) {
+  //       console.error('密码修改出错:', error);
+  //       ElMessage.error('密码修改失败，请稍后重试');
+  //     }
+  //   } else {
+  //     return false;
+  //   }
+  // });
 };
 
 const userStats = ref({
